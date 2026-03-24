@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CW Koch Trainer</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="phone-frame">
+        <div class="status-bar">
+          <span>9:42</span>
+          <span>Frontend CW</span>
+          <span>61%</span>
+        </div>
+
+        <section class="screen is-active" data-screen="home">
+          <header class="app-bar">
+            <span class="app-bar__title">IZ2UUF Morse Koch CW</span>
+            <button class="icon-button" id="open-settings-btn" aria-label="Abrir ajustes">
+              ⚙
+            </button>
+          </header>
+
+          <div class="screen-content home-content">
+            <div class="brand-card">
+              <h1>IZ2UUF Morse Koch CW</h1>
+              <p>Version 2.0 · frontend</p>
+              <button class="pro-pill">GUIA</button>
+            </div>
+
+            <button class="primary-pill" id="start-session-btn">
+              <strong>comienzo</strong>
+              <span>Continua con tu ultimo ejercicio.</span>
+            </button>
+
+            <button class="primary-pill" id="pick-session-btn">
+              <strong>Escoger</strong>
+              <span>Elegir entre los ejercicios disponibles.</span>
+            </button>
+
+            <button class="ghost-pill" id="open-profile-btn">
+              <span class="pin-dot">◎</span>
+              <span>Perfil</span>
+            </button>
+          </div>
+        </section>
+
+        <section class="screen" data-screen="settings">
+          <header class="app-bar">
+            <button class="icon-button" data-back-screen="home" aria-label="Volver">←</button>
+            <span class="app-bar__title">Ajustes</span>
+            <span class="app-bar__spacer"></span>
+          </header>
+
+          <div class="screen-content settings-content">
+            <div class="settings-section">
+              <p class="settings-label">Ajustes de ejercicio</p>
+              <button class="setting-row" data-setting="exerciseType">
+                <span>Tipo de ejercicio</span>
+                <small id="value-exerciseType"></small>
+              </button>
+              <button class="setting-row" data-setting="wpm">
+                <span>WPM</span>
+                <small id="value-wpm"></small>
+              </button>
+              <button class="setting-row" data-setting="unit">
+                <span>Unidad de velocidad</span>
+                <small id="value-unit"></small>
+              </button>
+              <button class="setting-row" data-setting="duration">
+                <span>Duracion del ejercicio</span>
+                <small id="value-duration"></small>
+              </button>
+              <button class="setting-row" data-setting="wordLength">
+                <span>Longitud de palabra</span>
+                <small id="value-wordLength"></small>
+              </button>
+              <button class="setting-row" data-setting="kochLevel">
+                <span>Koch nivel</span>
+                <small id="value-kochLevel"></small>
+              </button>
+              <button class="setting-row" data-setting="hardLetters">
+                <span>Hard letters</span>
+                <small id="value-hardLetters"></small>
+              </button>
+              <label class="toggle-row">
+                <span>Auto hard letters</span>
+                <input id="toggle-autoHard" type="checkbox" />
+              </label>
+              <button class="setting-row" data-setting="customChain">
+                <span>Cadena personalizada</span>
+                <small id="value-customChain"></small>
+              </button>
+            </div>
+
+            <div class="settings-section">
+              <p class="settings-label">Mas configuracion de codigo</p>
+              <button class="setting-row" data-setting="spaceChars">
+                <span>Espaciado entre caracteres</span>
+                <small id="value-spaceChars"></small>
+              </button>
+              <button class="setting-row" data-setting="spaceWords">
+                <span>Espaciado entre palabras</span>
+                <small id="value-spaceWords"></small>
+              </button>
+              <button class="setting-row" data-setting="startPause">
+                <span>Iniciar pausa</span>
+                <small id="value-startPause"></small>
+              </button>
+              <button class="setting-row" data-setting="ratio">
+                <span>Relacion tablero / punto</span>
+                <small id="value-ratio"></small>
+              </button>
+            </div>
+
+            <div class="settings-section">
+              <p class="settings-label">Configuraciones de audio</p>
+              <button class="setting-row" data-setting="frequency">
+                <span>Sidetone frecuencia</span>
+                <small id="value-frequency"></small>
+              </button>
+              <button class="setting-row" data-setting="dotPitch">
+                <span>Campo de puntos</span>
+                <small id="value-dotPitch"></small>
+              </button>
+              <button class="setting-row" data-setting="attack">
+                <span>Ataque de tono</span>
+                <small id="value-attack"></small>
+              </button>
+              <button class="setting-row" data-setting="voiceMode">
+                <span>Modo de voz</span>
+                <small id="value-voiceMode"></small>
+              </button>
+              <button class="setting-row" data-setting="talkBefore">
+                <span>Tiempo antes de hablar</span>
+                <small id="value-talkBefore"></small>
+              </button>
+              <button class="setting-row" data-setting="talkAfter">
+                <span>Tiempo despues de hablar</span>
+                <small id="value-talkAfter"></small>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <section class="screen" data-screen="session">
+          <header class="app-bar">
+            <button class="icon-button" data-back-screen="home" aria-label="Volver">←</button>
+            <span class="app-bar__title">Sesion CW</span>
+            <button class="icon-button" id="replay-session-btn" aria-label="Repetir audio">↻</button>
+          </header>
+
+          <div class="screen-content session-content">
+            <div class="summary-card">
+              <p id="session-summary-title">Ejercicio Koch</p>
+              <strong id="session-summary-value">KMURE</strong>
+              <small id="session-summary-meta">14 WPM · 5 letras</small>
+            </div>
+
+            <div class="session-actions">
+              <button class="primary-pill" id="play-session-btn">
+                <strong>Reproducir</strong>
+                <span>Escuchar el ejercicio con la configuracion actual.</span>
+              </button>
+              <button class="primary-pill secondary-style" id="new-session-sequence-btn">
+                <strong>Nuevo grupo</strong>
+                <span>Genera otra secuencia segun el ejercicio actual.</span>
+              </button>
+            </div>
+
+            <label class="answer-block" for="session-answer">
+              <span>Tu respuesta</span>
+              <input id="session-answer" type="text" autocomplete="off" />
+            </label>
+
+            <div class="session-footer">
+              <button class="ghost-pill inline-pill" id="check-session-btn">Corregir</button>
+              <button class="ghost-pill inline-pill" id="show-session-btn">Mostrar</button>
+            </div>
+            <p class="feedback-text" id="session-feedback">Todavia no hay intento.</p>
+          </div>
+        </section>
+
+        <section class="screen" data-screen="profile">
+          <header class="app-bar">
+            <button class="icon-button" data-back-screen="home" aria-label="Volver">←</button>
+            <span class="app-bar__title">Perfil</span>
+            <span class="app-bar__spacer"></span>
+          </header>
+
+          <div class="screen-content profile-content">
+            <div class="stat-block">
+              <span>Sesiones realizadas</span>
+              <strong id="stat-sessions">0</strong>
+            </div>
+            <div class="stat-block">
+              <span>Precision</span>
+              <strong id="stat-accuracy">0%</strong>
+            </div>
+            <div class="stat-block">
+              <span>Ultimo ejercicio</span>
+              <strong id="stat-last-exercise">Sin datos</strong>
+            </div>
+            <div class="reference-panel">
+              <p class="settings-label">Tabla Morse</p>
+              <div class="reference-grid" id="reference-grid"></div>
+            </div>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <div class="modal-backdrop hidden" id="setting-modal">
+      <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <div class="modal-body">
+          <h2 id="modal-title">Ajuste</h2>
+          <div id="modal-options" class="modal-options"></div>
+        </div>
+        <div class="modal-actions">
+          <button class="modal-btn" id="modal-cancel-btn">CANCELAR</button>
+          <button class="modal-btn modal-btn--accent" id="modal-accept-btn">ACEPTAR</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
