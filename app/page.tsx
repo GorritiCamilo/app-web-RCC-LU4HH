@@ -177,7 +177,7 @@ export default function MorseTrainerPage() {
         
         {/* Content Area */}
         <div className="flex-1 flex flex-col relative w-full h-full p-0 md:p-6 lg:p-8">
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full h-full flex flex-col md:flex-row gap-0 md:gap-8">
+          <Tabs value={activeTab} onValueChange={(val) => { setActiveTab(val); stop(); }} className="w-full h-full flex flex-col md:flex-row gap-0 md:gap-8">
             
             {/* NAVIGATION SIDEBAR (Desktop) / BOTTOM BAR (Mobile) */}
             <div className="shrink-0 flex items-center justify-center order-last md:order-first absolute md:relative bottom-4 md:bottom-auto left-1/2 md:left-auto -translate-x-1/2 md:translate-x-0 w-[95%] sm:w-[340px] md:w-auto z-50">
@@ -571,19 +571,7 @@ export default function MorseTrainerPage() {
                     </div>
                   </div>
 
-                  <div className="p-8 rounded-[2.5rem] bg-secondary/20 border border-primary/5 space-y-6">
-                     <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground/40">Recent Achievements</h3>
-                     <div className="grid gap-3">
-                        {["Velocista v20", "Madrugador", "Constancia"].map((tag: string) => (
-                          <div key={tag} className="flex items-center gap-4 p-4 rounded-2xl bg-background/50 border border-border/50 shadow-sm group hover:border-primary/30 transition-colors">
-                            <div className="h-8 w-8 rounded-xl bg-primary/5 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                              <BookOpen className="h-4 w-4 text-primary" />
-                            </div>
-                            <span className="text-sm font-black">{tag}</span>
-                          </div>
-                        ))}
-                     </div>
-                  </div>
+
                </div>
             </TabsContent>
 
