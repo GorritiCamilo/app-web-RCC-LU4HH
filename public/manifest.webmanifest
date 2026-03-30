@@ -1,0 +1,29 @@
+{
+  "name": "CW Koch Trainer",
+  "short_name": "CW Trainer",
+  "description": "Entrenamiento avanzado de Codigo Morse (Metodo Koch)",
+  "lang": "es",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f7f9fd",
+  "theme_color": "#5f43ef",
+  "icons": [
+    {
+      "src": "/icon",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "/apple-icon",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ]
+}

@@ -8,6 +8,16 @@ const outfit = Outfit({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "CW Koch Trainer - Radio Club Córdoba",
   description: "Entrenamiento avanzado de Código Morse (Método Koch)",
+  manifest: "/manifest.webmanifest",
+  applicationName: "CW Koch Trainer",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "CW Koch Trainer",
+  },
+  formatDetection: {
+    telephone: false,
+  },
 };
 
 export default function RootLayout({

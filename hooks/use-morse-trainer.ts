@@ -42,6 +42,7 @@ export function useMorseTrainer(config: MorseTrainerConfig) {
   
   const audioCtxRef = useRef<AudioContext | null>(null)
   const timerRef = useRef<NodeJS.Timeout | null>(null)
+  const schedulerRef = useRef<number | null>(null)
   const nextStartTimeRef = useRef<number>(0)
   const isPlayingRef = useRef(false)
   const audioPrimedRef = useRef(false)
@@ -50,7 +51,16 @@ export function useMorseTrainer(config: MorseTrainerConfig) {
     setIsPlaying(false)
     isPlayingRef.current = false
     if (timerRef.current) clearInterval(timerRef.current)
+    if (schedulerRef.current) {
+      window.clearTimeout(schedulerRef.current)
+      schedulerRef.current = null
+    }
     setPhase("idle")
+
+    const context = audioCtxRef.current
+    if (context?.state === "running") {
+      void context.suspend()
+    }
     
     // Stop any ongoing sound if possible (though scheduling makes this tricky without tracking every oscillator)
     // For now, we just stop the loop.
@@ -178,7 +188,7 @@ export function useMorseTrainer(config: MorseTrainerConfig) {
       }
 
       if (isPlayingRef.current) {
-        requestAnimationFrame(run)
+        schedulerRef.current = window.setTimeout(run, 60)
       }
     }
 
@@ -199,8 +209,20 @@ export function useMorseTrainer(config: MorseTrainerConfig) {
     return () => {
       isPlayingRef.current = false
       if (timerRef.current) clearInterval(timerRef.current)
+      if (schedulerRef.current) window.clearTimeout(schedulerRef.current)
     }
   }, [])
+
+  useEffect(() => {
+    const onVisibilityChange = () => {
+      if (document.hidden && isPlayingRef.current) {
+        stop()
+      }
+    }
+
+    document.addEventListener("visibilitychange", onVisibilityChange)
+    return () => document.removeEventListener("visibilitychange", onVisibilityChange)
+  }, [stop])
 
   return {
     isPlaying,

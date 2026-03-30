@@ -176,6 +176,30 @@ export default function MorseTrainerPage() {
     return () => window.removeEventListener("keydown", handleKeyDown)
   }, [handleToggle])
 
+  // Register service worker once the app is mounted to enable offline usage.
+  useEffect(() => {
+    if (typeof window === "undefined" || !("serviceWorker" in navigator)) return
+
+    const setupServiceWorker = async () => {
+      try {
+        if (process.env.NODE_ENV !== "production") {
+          const registrations = await navigator.serviceWorker.getRegistrations()
+          await Promise.all(registrations.map((registration) => registration.unregister()))
+
+          const cacheKeys = await caches.keys()
+          await Promise.all(cacheKeys.map((key) => caches.delete(key)))
+          return
+        }
+
+        await navigator.serviceWorker.register("/sw.js")
+      } catch (error) {
+        console.error("Service worker setup failed", error)
+      }
+    }
+
+    void setupServiceWorker()
+  }, [])
+
   if (!mounted) return null
 
   return (
@@ -508,10 +532,10 @@ export default function MorseTrainerPage() {
                                 })
                               }}
                               className={cn(
-                                "w-6 h-6 sm:w-7 sm:h-7 rounded-md text-[10px] sm:text-xs font-black flex items-center justify-center transition-all border",
+                                "w-6 h-6 sm:w-7 sm:h-7 rounded-md text-[10px] sm:text-xs font-black flex items-center justify-center transition-all duration-200 border focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary focus-visible:ring-offset-background",
                                 isActive 
-                                  ? "bg-primary text-primary-foreground border-primary shadow-[0_0_10px_rgba(var(--primary),0.3)]" 
-                                  : "bg-secondary/30 text-muted-foreground border-transparent hover:bg-primary/20 hover:text-primary cursor-pointer border shadow-none"
+                                  ? "bg-primary text-primary-foreground border-primary scale-110 shadow-[0_0_0_2px_hsl(var(--background)),0_0_0_4px_hsl(var(--primary)),0_10px_20px_-8px_rgba(0,0,0,0.55)]" 
+                                  : "bg-background/90 text-foreground/70 border-border hover:bg-primary/15 hover:text-foreground hover:border-primary/40 cursor-pointer"
                               )}
                             >
                               {l}
