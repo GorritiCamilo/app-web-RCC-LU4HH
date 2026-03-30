@@ -38,10 +38,13 @@ export default function MorseTrainerPage() {
     phase,
     start,
     stop,
+    unlockAudio,
     playSingleLetter
   } = useMorseTrainer(config)
 
-  const startExam = useCallback(() => {
+  const startExam = useCallback(async () => {
+    await unlockAudio()
+
     const letters = config.selectedLetters
     const target = letters[Math.floor(Math.random() * letters.length)]
     setExamState({
@@ -54,8 +57,10 @@ export default function MorseTrainerPage() {
       feedback: "",
       lastGuess: ""
     })
-    setTimeout(() => playSingleLetter(target), 500)
-  }, [config.selectedLetters, playSingleLetter])
+    setTimeout(() => {
+      void playSingleLetter(target)
+    }, 500)
+  }, [config.selectedLetters, playSingleLetter, unlockAudio])
 
   const nextExamLetter = useCallback(() => {
     const letters = config.selectedLetters
@@ -67,7 +72,9 @@ export default function MorseTrainerPage() {
       feedback: "",
       lastGuess: ""
     }))
-    setTimeout(() => playSingleLetter(target), 500)
+    setTimeout(() => {
+      void playSingleLetter(target)
+    }, 500)
   }, [config.selectedLetters, playSingleLetter])
 
   const checkExamAnswer = useCallback((char: string) => {
@@ -153,7 +160,7 @@ export default function MorseTrainerPage() {
     if (isPlaying) {
       stop()
     } else {
-      start()
+      void start()
     }
   }, [isPlaying, start, stop])
 
@@ -348,7 +355,9 @@ export default function MorseTrainerPage() {
                        
                        <Button 
                           className="w-full h-18 rounded-3xl font-black tracking-wide text-lg shadow-2xl shadow-primary/20 active:scale-95" 
-                          onClick={startExam}
+                          onClick={() => {
+                            void startExam()
+                          }}
                         >
                            BEGIN ASSESSMENT
                            <Play className="h-5 w-5 ml-3" />
@@ -377,7 +386,9 @@ export default function MorseTrainerPage() {
                             <Button
                               variant="ghost"
                               className="mt-4 text-[10px] font-black uppercase opacity-60 hover:opacity-100 flex items-center gap-2"
-                              onClick={() => playSingleLetter(examState.target)}
+                              onClick={() => {
+                                void playSingleLetter(examState.target)
+                              }}
                             >
                               <Volume2 className="h-3 w-3" /> Repeat Sound
                             </Button>

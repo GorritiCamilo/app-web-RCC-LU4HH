@@ -44,6 +44,7 @@ export function useMorseTrainer(config: MorseTrainerConfig) {
   const timerRef = useRef<NodeJS.Timeout | null>(null)
   const nextStartTimeRef = useRef<number>(0)
   const isPlayingRef = useRef(false)
+  const audioPrimedRef = useRef(false)
 
   const stop = useCallback(() => {
     setIsPlaying(false)
@@ -59,11 +60,31 @@ export function useMorseTrainer(config: MorseTrainerConfig) {
     if (!audioCtxRef.current) {
       audioCtxRef.current = new (window.AudioContext || (window as any).webkitAudioContext)()
     }
-    if (audioCtxRef.current.state === "suspended") {
-      audioCtxRef.current.resume()
-    }
     return audioCtxRef.current
   }, [])
+
+  const unlockAudio = useCallback(async () => {
+    const context = initAudio()
+
+    if (context.state !== "running") {
+      try {
+        await context.resume()
+      } catch {
+        return null
+      }
+    }
+
+    // iOS Safari can require a first no-op sound triggered by user gesture.
+    if (!audioPrimedRef.current) {
+      const source = context.createBufferSource()
+      source.buffer = context.createBuffer(1, 1, 22050)
+      source.connect(context.destination)
+      source.start(0)
+      audioPrimedRef.current = true
+    }
+
+    return context
+  }, [initAudio])
 
   const playTone = useCallback((time: number, duration: number) => {
     const context = initAudio()
@@ -115,8 +136,10 @@ export function useMorseTrainer(config: MorseTrainerConfig) {
     return currentTime - intraCharSpace + interCharSpace
   }, [config.wpm, config.farnsworthWpm, playTone])
 
-  const start = useCallback(() => {
-    const context = initAudio()
+  const start = useCallback(async () => {
+    const context = await unlockAudio()
+    if (!context) return
+
     setIsPlaying(true)
     isPlayingRef.current = true
     setPhase("playing")
@@ -170,7 +193,7 @@ export function useMorseTrainer(config: MorseTrainerConfig) {
         return prev - 1
       })
     }, 1000)
-  }, [config, initAudio, scheduleLetter, stop])
+  }, [config, scheduleLetter, stop, unlockAudio])
 
   useEffect(() => {
     return () => {
@@ -187,10 +210,12 @@ export function useMorseTrainer(config: MorseTrainerConfig) {
     phase,
     start,
     stop,
+    unlockAudio,
     MORSE_MAP,
-    playSingleLetter: (letter: string) => {
-      const context = initAudio()
-      scheduleLetter(letter, context.currentTime)
+    playSingleLetter: async (letter: string) => {
+      const context = await unlockAudio()
+      if (!context) return
+      scheduleLetter(letter, context.currentTime + 0.01)
     }
   }
 }
